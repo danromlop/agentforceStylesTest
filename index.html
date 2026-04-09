@@ -15,33 +15,27 @@
         <h1>Testing Agentforce 🤖</h1>
         <p>Si la configuración es correcta, la burbuja aparecerá abajo a la derecha.</p>
     </div>
-
+	
    <script type='text/javascript'>
-	function initEmbeddedMessaging() {
-		
-		try {	
-				embeddedservice_bootstrap.settings.language = 'es_ES';
-		        // ✅ Pasar contexto del usuario logueado
-		        embeddedservice_bootstrap.settings.hiddenPrechatFields = {
-		            ExternalUserId: '005aj00000V9U9tAAF',
-		            Email: 'danromlop@gmail.com',
-		            UserRole: ''
-		        };		
-		        embeddedservice_bootstrap.init(
-		            '00Daj00000pux1d',
-		            'ESA_Web_Deployment',
-		            'https://orgfarm-5710a5cf7d-dev-ed.develop.my.site.com/ESWESAWebDeployment1724800920657',
-		            {
-		                scrt2URL: 'https://orgfarm-5710a5cf7d-dev-ed.develop.my.salesforce-scrt.com'
-		            }
-		        );		
-		} catch (err) {		
-		console.error('Error loading Embedded Messaging: ', err);		
-		}
-	}
-    </script>
-    <script type='text/javascript' src='https://orgfarm-5710a5cf7d-dev-ed.develop.my.site.com/ESWESAWebDeployment1724800920657/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
-    
+		function initEmbeddedMessaging() {
+			try {
+				embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+	
+				embeddedservice_bootstrap.init(
+					'00Daj00000pux1d',
+					'ESA_Web_Deployment',
+					'https://orgfarm-5710a5cf7d-dev-ed.develop.my.site.com/ESWESAWebDeployment1724800920657',
+					{
+						scrt2URL: 'https://orgfarm-5710a5cf7d-dev-ed.develop.my.salesforce-scrt.com'
+					}
+				);
+			} catch (err) {
+				console.error('Error loading Embedded Messaging: ', err);
+			}
+		};
+	</script>
+	<script type='text/javascript' src='https://orgfarm-5710a5cf7d-dev-ed.develop.my.site.com/ESWESAWebDeployment1724800920657/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+	    
 	<meta name="referrer" content="no-referrer-when-downgrade">
 </body>
 </html>
