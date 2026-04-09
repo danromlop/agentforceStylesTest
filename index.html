@@ -21,6 +21,11 @@
 			try {
 			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
 
+				
+			embeddedservice_bootstrap.settings.hiddenPrechatFields = {
+				"Email": "danromlop@gmail.com",
+				"ExternalUserId": "005aj00000V9U9tAAF"
+			};
 			embeddedservice_bootstrap.init(
 				'00Daj00000pux1d',
 				'ESA_Web_Deployment',
@@ -30,10 +35,6 @@
 				}
 			);
 
-			embeddedservice_bootstrap.settings.hiddenPrechatFields = {
-				"Email": "danromlop@gmail.com",
-				"ExternalUserId": "005aj00000V9U9tAAF"
-			};
 		} catch (err) {
 			console.error('Error loading Embedded Messaging: ', err);
 		    }
