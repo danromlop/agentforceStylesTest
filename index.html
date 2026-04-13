@@ -26,6 +26,12 @@
 				"Email": "danromlop@gmail.com",
 				"ExternalUserId": "003aj00001TBTWvAAP"
 			};
+
+			window.addEventListener("onEmbeddedMessagingReady", () => {            
+				console.log( "Inside Prechat API!!" );
+				embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields( { "ExternalUserId" : "Test123" } );
+			});
+				
 			embeddedservice_bootstrap.init(
 				'00Daj00000pux1d',
 				'ESA_Web_Deployment',
