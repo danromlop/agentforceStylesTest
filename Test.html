@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tests desde XML</title>
+  <style>
+    :root{
+      --bg: #0b0d10; --panel: #141820; --muted:#9aa4b2; --ring:#1f6feb; --ok:#1db954; --ko:#ff4d4f;
+      --text:#e6edf3; --border:#263242; --gap:16px; --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text); background:linear-gradient(180deg,#0b0d10,#0e1218 60%,#0b0d10)}
+    .container{max-width:1000px; margin:0 auto; padding:24px}
+    header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px}
+    h1{font-size:1.25rem; margin:0}
+    .muted{color:var(--muted)}
+    .grid{display:grid; gap:var(--gap)}
+    .panel{background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:18px}
+    .row{display:flex; gap:var(--gap); flex-wrap:wrap; align-items:center}
+    .btn{appearance:none; border:1px solid var(--border); background:#0f1722; color:var(--text); padding:10px 14px; border-radius:10px; cursor:pointer}
+    .btn.primary{background:var(--ring); border-color:transparent}
+    .btn.ghost{background:transparent}
+    .btn:disabled{opacity:.6; cursor:default}
+    select,input[type=file]{padding:10px; background:#0f1722; color:var(--text); border:1px solid var(--border); border-radius:10px}
+    textarea{width:100%; min-height:200px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#0b1220; color:var(--text); border:1px solid var(--border); border-radius:12px; padding:12px}
+    .list{display:grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap:var(--gap)}
+    .card{background:#0f1420; border:1px solid var(--border); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:8px}
+    .card h3{margin:0 0 2px 0; font-size:1.05rem}
+    .tags{display:flex; gap:8px; flex-wrap:wrap}
+    .tag{font-size:.8rem; color:#cbd5e1; background:#0b1220; border:1px solid var(--border); padding:2px 8px; border-radius:999px}
+    .toolbar{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+    .status{font-weight:600}
+    .ok{color:var(--ok)}
+    .ko{color:var(--ko)}
+    hr{border:none; border-top:1px solid var(--border); margin:14px 0}
+    .question-text{font-size:1.05rem}
+    .options label{display:flex; gap:10px; align-items:flex-start; padding:8px 10px; border:1px solid var(--border); background:#0b1220; border-radius:10px; margin-bottom:8px; cursor:pointer}
+    .options input{margin-top:3px}
+    .pill{padding:6px 10px; border-radius:999px; background:#0b1220; border:1px solid var(--border)}
+    .header-line{display:flex; align-items:center; justify-content:space-between; gap:12px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header-line">
+      <h1>Tests desde XML</h1>
+      <div class="pill muted" id="counter"></div>
+    </header>
+
+    <!-- Vista: Inicio -->
+    <section id="home" class="grid">
+      <div class="panel">
+        <div class="row" style="justify-content:space-between">
+          <div>
+            <div class="muted">Tus tests guardados</div>
+            <div class="muted" style="font-size:.9rem">Se guardan localmente (localStorage). Para archivos, guardo el contenido para que puedas lanzarlos sin volver a seleccionarlos.</div>
+          </div>
+          <div class="row">
+            <button class="btn ghost" id="clearAllBtn">Borrar lista</button>
+            <button class="btn" id="importBtn">Importar XML</button>
+            <button class="btn primary" id="newBtn">Crear desde texto</button>
+          </div>
+        </div>
+        <div id="savedList" class="list" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <!-- Vista: Editor / Creador -->
+    <section id="editor" class="panel" style="display:none">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">Añadir/Editar test</h2>
+        <button class="btn ghost" id="backHome1">Volver</button>
+      </div>
+      <div class="grid" style="gap:10px; margin-top:10px">
+        <label>Nombre del test
+          <input id="testName" placeholder="Ej: Agentforce SET1" />
+        </label>
+        <label>XML
+          <textarea id="xmlText" placeholder="Pega aquí el XML con <exam_questions>..."></textarea>
+        </label>
+        <div class="toolbar">
+          <button class="btn" id="loadFileBtn">Cargar desde archivo</button>
+          <input id="fileHidden" type="file" accept=".xml,text/xml" hidden />
+          <button class="btn primary" id="saveTestBtn">Guardar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vista: Quiz -->
+    <section id="quiz" class="panel" style="display:none">
+      <div class="row" style="justify-content:space-between; align-items:center">
+        <div class="row">
+          <button class="btn ghost" id="backHome2">Volver</button>
+          <div class="pill" id="orderWrap">
+            Orden: 
+            <select id="orderSel" style="margin-left:6px">
+              <option value="asc">1 → 60</option>
+              <option value="desc">60 → 1</option>
+              <option value="random" selected>Aleatorio</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div id="progress" class="muted">Pregunta 0/0</div>
+          <div id="score" class="pill">Puntuación 0</div>
+        </div>
+      </div>
+      <hr />
+      <div id="qHeader" class="muted"></div>
+      <div id="qText" class="question-text"></div>
+      <form id="optionsForm" class="options"></form>
+      <div class="toolbar">
+        <button class="btn" id="checkBtn" type="button">Comprobar</button>
+        <button class="btn" id="nextBtn" type="button" disabled>Siguiente</button>
+        <div id="feedback" class="status"></div>
+      </div>
+      <hr />
+      <div class="muted" id="source"></div>
+    </section>
+
+    <!-- Vista: Final -->
+    <section id="finish" class="panel" style="display:none">
+      <div class="row" style="justify-content:space-between; align-items:center">
+        <h2 style="margin:0">Resultado</h2>
+        <button class="btn ghost" id="backHome3">Volver</button>
+      </div>
+      <div id="finalSummary" class="status" style="margin:8px 0 12px"></div>
+      <div class="toolbar">
+        <button class="btn" id="retryWrongBtn" type="button">Repetir falladas</button>
+        <button class="btn primary" id="restartBtn" type="button">Reiniciar test</button>
+      </div>
+      <div id="wrongList" class="muted" style="margin-top:10px"></div>
+    </section>
+
+  </div>
+
+<script>
+  // Estado global
+  const dbKey = 'quizxml.tests.v1';
+  let tests = []; // [{id, name, xml, createdAt}]
+  let current = null; // test actual {id,...}
+
+  // Utiles UI
+  const $ = (sel)=>document.querySelector(sel);
+  const $$ = (sel)=>document.querySelectorAll(sel);
+  const show = (id)=>($(id).style.display='block');
+  const hide = (id)=>($(id).style.display='none');
+
+  function loadDB(){
+    try{ tests = JSON.parse(localStorage.getItem(dbKey) || '[]'); }catch{ tests=[] }
+    $('#counter').textContent = `${tests.length} test${tests.length!==1?'s':''}`;
+  }
+  function saveDB(){ localStorage.setItem(dbKey, JSON.stringify(tests)); loadDB(); }
+  function uid(){ return 't'+Math.random().toString(36).slice(2,9); }
+
+  // Render lista
+  function renderList(){
+    const wrap = $('#savedList');
+    wrap.innerHTML = '';
+    if(!tests.length){
+      wrap.innerHTML = `<div class="muted">Aún no hay tests guardados. Usa "Importar XML" o "Crear desde texto".</div>`;
+      return;
+    }
+    tests.forEach(t=>{
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerHTML = `
+        <h3>${t.name || 'Sin título'}</h3>
+        <div class="tags">
+          <span class="tag">${new Date(t.createdAt||Date.now()).toLocaleString()}</span>
+          <span class="tag">${countQuestions(t.xml)} preguntas</span>
+        </div>
+        <div class="toolbar">
+          <button class="btn primary" data-id="${t.id}" data-act="play">Hacer test</button>
+          <button class="btn" data-id="${t.id}" data-act="edit">Editar</button>
+          <button class="btn ghost" data-id="${t.id}" data-act="del">Borrar</button>
+        </div>`;
+      wrap.appendChild(div);
+    });
+  }
+
+  // Contar preguntas rápidamente
+  function countQuestions(xml){
+    try{
+      const doc = new DOMParser().parseFromString(xml,'application/xml');
+      return doc.querySelectorAll('exam_questions > question').length;
+    }catch{ return 0 }
+  }
+
+  // Navegación
+  function goHome(){ hide('#editor'); hide('#quiz'); hide('#finish'); show('#home'); renderList(); }
+  function goEditor(test){ hide('#home'); hide('#quiz'); hide('#finish'); show('#editor');
+    $('#testName').value = test?.name || ''; $('#xmlText').value = test?.xml || ''; current = test||null; }
+  function goQuiz(test){ hide('#home'); hide('#editor'); hide('#finish'); show('#quiz'); current = test; startQuiz(test.xml); }
+  function goFinish(){ hide('#home'); hide('#editor'); hide('#quiz'); show('#finish'); }
+
+  // Acciones Home
+  $('#newBtn').addEventListener('click', ()=> goEditor(null));
+  $('#importBtn').addEventListener('click', async ()=>{
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = '.xml,text/xml';
+    inp.onchange = async ()=>{
+      const f = inp.files[0]; if(!f) return;
+      const xml = await f.text();
+      const rec = {id:uid(), name: f.name.replace(/\.xml$/i,''), xml, createdAt: Date.now()};
+      tests.unshift(rec); saveDB(); renderList();
+    };
+    inp.click();
+  });
+  $('#clearAllBtn').addEventListener('click', ()=>{
+    if(confirm('¿Borrar todos los tests guardados?')){ tests=[]; saveDB(); renderList(); }
+  });
+  $('#savedList').addEventListener('click', (e)=>{
+    const btn = e.target.closest('button'); if(!btn) return;
+    const id = btn.dataset.id; const act = btn.dataset.act; const t = tests.find(x=>x.id===id);
+    if(!t) return;
+    if(act==='play') goQuiz(t);
+    if(act==='edit') goEditor(t);
+    if(act==='del'){
+      if(confirm('¿Eliminar este test?')){ tests = tests.filter(x=>x.id!==id); saveDB(); renderList(); }
+    }
+  });
+
+  // Editor
+  $('#backHome1').addEventListener('click', goHome);
+  $('#loadFileBtn').addEventListener('click', ()=> $('#fileHidden').click());
+  $('#fileHidden').addEventListener('change', async (e)=>{
+    const f = e.target.files[0]; if(!f) return; $('#testName').value = f.name.replace(/\.xml$/i,''); $('#xmlText').value = await f.text(); });
+  $('#saveTestBtn').addEventListener('click', ()=>{
+    const name = $('#testName').value.trim() || 'Sin título'; const xml = $('#xmlText').value.trim();
+    if(!xml){ alert('Pega o carga un XML primero'); return; }
+    if(current){ current.name = name; current.xml = xml; } else { tests.unshift({id:uid(), name, xml, createdAt: Date.now()}); }
+    saveDB(); goHome();
+  });
+
+  // Lógica de Quiz (reutiliza motor anterior)
+  let questions=[], orderSelEl, progressEl, scoreEl, qHeaderEl, qTextEl, optionsForm, checkBtn, nextBtn, feedbackEl, sourceEl;
+  let seq=[], idx=0, score=0, answered=false, wrong=[];
+
+  function parseXMLString(str){
+    const doc = new DOMParser().parseFromString(str,'application/xml');
+    const err = doc.querySelector('parsererror'); if(err) throw new Error('XML no válido');
+    const arr=[]; doc.querySelectorAll('exam_questions > question').forEach(q=>{
+      const num = Number(q.getAttribute('number'))||null;
+      const text = (q.querySelector('text')?.textContent||'').trim();
+      const options = {};
+      q.querySelectorAll('option[id]').forEach(opt=>{ const k=opt.getAttribute('id').trim().toUpperCase(); if(k) options[k]=(opt.textContent||'').trim(); });
+      const optionKeys = Object.keys(options);
+      const correct = (q.querySelector('correct_answer')?.textContent||'').trim().toUpperCase().split(',').map(s=>s.trim()).filter(s=>optionKeys.includes(s));
+      const source = (q.querySelector('source')?.textContent||'').trim();
+      if(!text || !optionKeys.length || !correct.length) return;
+      arr.push({num,text,options,optionKeys,correct,source});
+    });
+    return arr;
+  }
+  function makeSequence(order){
+    const indices = questions.map((_,i)=>i);
+    const cmp = (i,j)=> (questions[i].num||0)-(questions[j].num||0);
+    if(order==='asc') return indices.sort(cmp);
+    if(order==='desc') return indices.sort((i,j)=>-cmp(i,j));
+    for(let i=indices.length-1;i>0;i--){ const r=Math.floor(Math.random()*(i+1)); [indices[i],indices[r]]=[indices[r],indices[i]]; }
+    return indices;
+  }
+  function renderQuestion(){
+    const q = questions[ seq[idx] ];
+    progressEl.textContent = `Pregunta ${idx+1}/${seq.length}`;
+    scoreEl.textContent = `Puntuación ${score}`;
+    const isMulti = q.correct.length > 1;
+    qHeaderEl.textContent = (q.num ? `N.º ${q.num}` : '') + (isMulti ? ` — Selecciona ${q.correct.length} respuestas` : '');
+    qTextEl.textContent = q.text;
+    optionsForm.innerHTML='';
+    q.optionKeys.forEach(letter=>{
+      const label=document.createElement('label');
+      const input=document.createElement('input'); input.type=isMulti?'checkbox':'radio'; input.name='opt'; input.value=letter;
+      const span=document.createElement('span'); span.textContent = `${letter}. ${q.options[letter]}`;
+      label.appendChild(input); label.appendChild(span); optionsForm.appendChild(label);
+    });
+    sourceEl.textContent = q.source? `Fuente: ${q.source}`: '';
+    feedbackEl.textContent=''; feedbackEl.className='status'; answered=false; checkBtn.disabled=false; nextBtn.disabled=true;
+  }
+  function checkAnswer(){
+    if(answered) return;
+    const selected = [...optionsForm.querySelectorAll('input[name="opt"]:checked')].map(i=>i.value);
+    if(!selected.length){ feedbackEl.textContent='Selecciona una opción'; return; }
+    answered=true; const q=questions[seq[idx]];
+    const isCorrect = selected.length===q.correct.length && q.correct.every(c=>selected.includes(c));
+    if(isCorrect){ score+=1; feedbackEl.textContent='Correcta'; feedbackEl.className='status ok'; }
+    else { wrong.push(seq[idx]); feedbackEl.textContent=`Incorrecta. Correcta: ${q.correct.join(', ')}`; feedbackEl.className='status ko'; }
+    checkBtn.disabled=true; nextBtn.disabled=false; scoreEl.textContent=`Puntuación ${score}`;
+  }
+  function nextQuestion(){ if(idx<seq.length-1){ idx+=1; renderQuestion(); } else endQuiz(); }
+  function endQuiz(){ goFinish(); $('#finalSummary').textContent=`Has acertado ${score} de ${seq.length}`; if(wrong.length){ $('#wrongList').textContent = 'Falladas: '+ wrong.map(i=> questions[i].num??(questions[i].text.slice(0,50)+'…')).join(', '); $('#retryWrongBtn').disabled=false; } else { $('#wrongList').textContent='No has fallado ninguna'; $('#retryWrongBtn').disabled=true; } }
+  function startQuiz(xml){
+    orderSelEl = $('#orderSel'); progressEl=$('#progress'); scoreEl=$('#score'); qHeaderEl=$('#qHeader'); qTextEl=$('#qText'); optionsForm=$('#optionsForm'); checkBtn=$('#checkBtn'); nextBtn=$('#nextBtn'); feedbackEl=$('#feedback'); sourceEl=$('#source');
+    questions = parseXMLString(xml); if(!questions.length){ alert('XML sin preguntas válidas'); goHome(); return; }
+    seq = makeSequence(orderSelEl.value); idx=0; score=0; answered=false; wrong=[]; renderQuestion();
+  }
+
+  // Eventos Quiz
+  $('#backHome2').addEventListener('click', goHome);
+  $('#checkBtn').addEventListener('click', checkAnswer);
+  $('#nextBtn').addEventListener('click', nextQuestion);
+  $('#orderSel').addEventListener('change', ()=>{ seq = makeSequence($('#orderSel').value); idx=0; renderQuestion(); });
+
+  // Final
+  $('#backHome3').addEventListener('click', goHome);
+  $('#retryWrongBtn').addEventListener('click', ()=>{
+    if(!wrong.length) return; const set=[...wrong]; wrong=[]; hide('#finish'); show('#quiz'); seq=set; idx=0; score=0; answered=false; renderQuestion();
+  });
+  $('#restartBtn').addEventListener('click', ()=>{ if(!current) return; goQuiz(current); });
+
+  // Init
+  loadDB(); renderList();
+  // accesos rápidos desde home
+  $('#home').addEventListener('click', (e)=>{
+    const a = e.target.closest('[data-act]'); if(!a) return; // handled in renderList()
+  });
+</script>
+</body>
+</html>
