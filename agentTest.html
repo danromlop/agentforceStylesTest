@@ -19,13 +19,18 @@
 <script type='text/javascript'>
 	function initEmbeddedMessaging() {
 		try {
-
-			embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
-					"User_Email": 'danromlop@gmail.com'
+			embeddedservice_bootstrap.settings.language = 'en_US';
+	
+			window.addEventListener("onEmbeddedMessagingReady", () => {
+				if (embeddedservice_bootstrap.prechatAPI) {
+					embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+						"User_Email": "danromlop@gmail.com"
+					});
+				} else {
+					console.warn("prechatAPI no está disponible");
+				}
 			});
-			
-			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
-
+	
 			embeddedservice_bootstrap.init(
 				'00Daj00000pux1d',
 				'ESA_Web_Deployment',
@@ -34,10 +39,11 @@
 					scrt2URL: 'https://orgfarm-5710a5cf7d-dev-ed.develop.my.salesforce-scrt.com'
 				}
 			);
+	
 		} catch (err) {
 			console.error('Error loading Embedded Messaging: ', err);
 		}
-	};
+	}
 </script>
 <script type='text/javascript' src='https://orgfarm-5710a5cf7d-dev-ed.develop.my.site.com/ESWESAWebDeployment1724800920657/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 
