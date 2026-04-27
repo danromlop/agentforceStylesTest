@@ -23,6 +23,7 @@
 			window.addEventListener("onEmbeddedMessagingReady", e => {
 				embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
 					"User_Email": 'danromlop@gmail.com'
+				});
 			});
 			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
 
@@ -34,6 +35,7 @@
 					scrt2URL: 'https://orgfarm-5710a5cf7d-dev-ed.develop.my.salesforce-scrt.com'
 				}
 			);
+				
 		} catch (err) {
 			console.error('Error loading Embedded Messaging: ', err);
 		}
