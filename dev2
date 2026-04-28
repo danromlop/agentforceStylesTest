@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba Agentforce</title>
+    <style>
+       /* body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; }*/
+        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+    </style>
+</head>
+<body>
+	<!--
+    <div class="card">
+        <h1>Testing Agentforce desde des 🤖</h1>
+        <p>Si la configuración es correcta, la burbuja aparecerá abajo a la derecha.</p>
+    </div> -->
+
+
+  <script type='text/javascript'>
+  	function initEmbeddedMessaging() {
+  		try {
+
+        window.addEventListener("onEmbeddedMessagingReady", e => {
+        				embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+        					"Username": 'username@esade.com',      	
+        				});
+            });
+  			embeddedservice_bootstrap.settings.language = 'es'; // For example, enter 'en' or 'en-US'
+  
+  			embeddedservice_bootstrap.init(
+  				'00DS800000H2hIP',
+  				'Route_to_the_AEA_agent',
+  				'https://esadeus--ecdessandb.sandbox.my.site.com/ESWTest1761734705465',
+  				{
+  					scrt2URL: 'https://esadeus--ecdessandb.sandbox.my.salesforce-scrt.com'
+  				}
+  			);
+  		} catch (err) {
+  			console.error('Error loading Embedded Messaging: ', err);
+  		}
+  	};
+  </script>
+  <script type='text/javascript' src='https://esadeus--ecdessandb.sandbox.my.site.com/ESWZECmchrouteToASAAge1777381921053/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+  
+
+	<meta name="referrer" content="no-referrer-when-downgrade">
+</body>
+</html>
