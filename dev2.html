@@ -22,8 +22,12 @@
         try {
             embeddedservice_bootstrap.settings.language = 'es'; 
 
-            embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
-                "Username": 'danielrtest654@gmail.com'    	
+            window.addEventListener("embeddedservice_bootstrap:initialized", () => {
+                if (embeddedservice_bootstrap.prechatAPI) {
+                    embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+                        "Username": 'danielrtest654@gmail.com'
+                    });
+                }
             });
  
             embeddedservice_bootstrap.init(
