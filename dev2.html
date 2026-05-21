@@ -18,32 +18,28 @@
 
 
   <script type='text/javascript'>
-    function initEmbeddedMessaging() {
-        try {
-            embeddedservice_bootstrap.settings.language = 'es'; 
-
-            window.addEventListener("embeddedservice_bootstrap:initialized", () => {
-                if (embeddedservice_bootstrap.prechatAPI) {
-                    embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
-                        "Username": 'danielrtest654@gmail.com'
-                    });
-                }
-            });
- 
-            embeddedservice_bootstrap.init(
-                '00DS800000H2hIP',
-                'Z_EC_mch_routeToASAAgent',
-                'https://esadeus--ecdessandb.sandbox.my.site.com/ESWZECmchrouteToASAAge1777381921053',
-                {
-                    scrt2URL: 'https://esadeus--ecdessandb.sandbox.my.salesforce-scrt.com'
-                }
-            );
-        } catch (err) {
-            console.error('Error loading Embedded Messaging: ', err);
-        }
-    };
+	function initEmbeddedMessaging() {
+		try {
+	 		window.addEventListener("onEmbeddedMessagingReady", e => {
+        				embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+        					"Username": 'danielrtest654@gmail.com',      	
+        				});
+            		});
+			embeddedservice_bootstrap.settings.language = 'es';
+			embeddedservice_bootstrap.init(
+				'00DS800000H8xFd',
+				'Z_EC_esd_ChatMessagingChannelDeployment',
+				'https://esadeus--ecpresandb.sandbox.my.site.com/ESWZECesdChatMessaging1779295378396',
+				{
+					scrt2URL: 'https://esadeus--ecpresandb.sandbox.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
 </script>
-<script type='text/javascript' src='https://esadeus--ecdessandb.sandbox.my.site.com/ESWZECmchrouteToASAAge1777381921053/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+<script type='text/javascript' src='https://esadeus--ecpresandb.sandbox.my.site.com/ESWZECesdChatMessaging1779295378396/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
   
 
 	<meta name="referrer" content="no-referrer-when-downgrade">
